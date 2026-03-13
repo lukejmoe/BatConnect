@@ -32,9 +32,14 @@ export default function PlayerDashboard() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Find a Cage</Text>
-        <TouchableOpacity style={styles.mapButton} onPress={() => router.push("/map")}>
-          <Text style={styles.mapButtonText}>🗺 Browse All</Text>
-        </TouchableOpacity>
+        <View style={styles.headerButtons}>
+          <TouchableOpacity style={styles.mapButton} onPress={() => router.push("/booking-history")}>
+            <Text style={styles.mapButtonText}>📋 My Bookings</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.mapButton} onPress={() => router.push("/map")}>
+            <Text style={styles.mapButtonText}>🗺 Browse All</Text>
+          </TouchableOpacity>
+        </View>
       </View>
 
       <TextInput
@@ -88,7 +93,8 @@ export default function PlayerDashboard() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#0a0a0a", padding: 24, paddingTop: 60 },
-  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16 },
+  header: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 16, flexWrap: "wrap", gap: 8 },
+  headerButtons: { flexDirection: "row", gap: 8 },
   title: { fontSize: 32, fontWeight: "bold", color: "#ffffff" },
   mapButton: { backgroundColor: "#1d3557", paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8 },
   mapButtonText: { color: "#ffffff", fontWeight: "bold" },
