@@ -12,6 +12,7 @@
     { "source": "/player-signup", "destination": "/player-signup.html" },
     { "source": "/facility-signup", "destination": "/facility-signup.html" },
     { "source": "/login", "destination": "/login.html" },
-    { "source": "/map", "destination": "/map.html" }
+    { "source": "/map", "destination": "/map.html" },
+    { "source": "/facility-detail", "destination": "/facility-detail.html" }
   ]
 }

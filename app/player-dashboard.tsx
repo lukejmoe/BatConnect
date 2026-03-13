@@ -79,8 +79,8 @@ export default function PlayerDashboard() {
                 <Text style={styles.location}>📍 {facility.city}, AZ</Text>
                 <Text style={styles.address}>{facility.address}</Text>
                 <Text style={styles.price}>${facility.price_per_hour}/hr</Text>
-                <TouchableOpacity style={styles.bookButton} onPress={() => router.push("/booking")}>
-                  <Text style={styles.bookButtonText}>Book Now</Text>
+                <TouchableOpacity style={styles.bookButton} onPress={() => router.push(`/facility-detail?id=${facility.id}`)}>
+                  <Text style={styles.bookButtonText}>View & Book</Text>
                 </TouchableOpacity>
               </View>
             ))}
