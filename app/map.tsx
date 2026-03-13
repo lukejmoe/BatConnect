@@ -1,11 +1,15 @@
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { supabase } from "./supabase";
 
 export default function Map() {
   const router = useRouter();
   const [facilities, setFacilities] = useState<any[]>([]);
+  const [search, setSearch] = useState('');
+  const [selectedCity, setSelectedCity] = useState('All');
+
+  const cities = ['All', 'Scottsdale', 'Phoenix', 'Mesa', 'Chandler', 'Avondale'];
 
   useEffect(() => {
     async function fetchFacilities() {
@@ -15,17 +19,50 @@ export default function Map() {
     fetchFacilities();
   }, []);
 
+  const filtered = facilities.filter((f) => {
+    const matchesCity = selectedCity === 'All' || f.city === selectedCity;
+    const matchesSearch = f.name.toLowerCase().includes(search.toLowerCase()) ||
+      f.city.toLowerCase().includes(search.toLowerCase());
+    return matchesCity && matchesSearch;
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Facilities Near You</Text>
-      <ScrollView style={styles.list}>
-        {facilities.map((facility) => (
+      <Text style={styles.subtitle}>Arizona Batting Cages</Text>
+
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search by name or city..."
+        placeholderTextColor="#888"
+        value={search}
+        onChangeText={setSearch}
+      />
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterRow}>
+        {cities.map((city) => (
+          <TouchableOpacity
+            key={city}
+            style={[styles.filterChip, selectedCity === city && styles.filterChipActive]}
+            onPress={() => setSelectedCity(city)}
+          >
+            <Text style={[styles.filterChipText, selectedCity === city && styles.filterChipTextActive]}>
+              {city}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      <Text style={styles.resultCount}>{filtered.length} facilities found</Text>
+
+      <ScrollView style={styles.list} showsVerticalScrollIndicator={false}>
+        {filtered.map((facility) => (
           <View key={facility.id} style={styles.card}>
             <View style={styles.cardHeader}>
               <Text style={styles.facilityName}>{facility.name}</Text>
               <Text style={styles.rating}>⭐ {facility.rating}</Text>
             </View>
-            <Text style={styles.location}>📍 {facility.city}</Text>
+            <Text style={styles.location}>📍 {facility.city}, AZ</Text>
             <Text style={styles.address}>{facility.address}</Text>
             <Text style={styles.price}>${facility.price_per_hour}/hr</Text>
             <TouchableOpacity style={styles.bookButton} onPress={() => router.push("/booking")}>
@@ -34,8 +71,9 @@ export default function Map() {
           </View>
         ))}
       </ScrollView>
+
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-        <Text style={styles.backButtonText}>Back to List</Text>
+        <Text style={styles.backButtonText}>Back</Text>
       </TouchableOpacity>
     </View>
   );
@@ -43,7 +81,15 @@ export default function Map() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#0a0a0a", padding: 24, paddingTop: 60 },
-  title: { fontSize: 24, fontWeight: "bold", color: "#ffffff", marginBottom: 16 },
+  title: { fontSize: 24, fontWeight: "bold", color: "#ffffff", marginBottom: 2 },
+  subtitle: { fontSize: 14, color: "#aaaaaa", marginBottom: 16 },
+  searchInput: { backgroundColor: "#1a1a1a", color: "#ffffff", padding: 14, borderRadius: 10, marginBottom: 12, fontSize: 15, borderWidth: 1, borderColor: "#333" },
+  filterRow: { flexDirection: "row", marginBottom: 12 },
+  filterChip: { backgroundColor: "#1a1a1a", borderRadius: 20, paddingVertical: 6, paddingHorizontal: 16, marginRight: 8, borderWidth: 1, borderColor: "#333" },
+  filterChipActive: { backgroundColor: "#e63946", borderColor: "#e63946" },
+  filterChipText: { color: "#aaaaaa", fontSize: 13, fontWeight: "bold" },
+  filterChipTextActive: { color: "#ffffff" },
+  resultCount: { color: "#aaaaaa", fontSize: 13, marginBottom: 12 },
   list: { flex: 1 },
   card: { backgroundColor: "#1a1a1a", borderRadius: 12, padding: 16, marginBottom: 16, borderWidth: 1, borderColor: "#333" },
   cardHeader: { flexDirection: "row", justifyContent: "space-between", marginBottom: 6 },
