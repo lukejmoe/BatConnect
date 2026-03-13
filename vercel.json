@@ -1,5 +1,17 @@
 {
   "buildCommand": "npx expo export --platform web",
   "outputDirectory": "dist",
-  "framework": null
+  "framework": null,
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
+    { "source": "/booking-confirmed", "destination": "/booking-confirmed.html" },
+    { "source": "/booking", "destination": "/booking.html" },
+    { "source": "/payment", "destination": "/payment.html" },
+    { "source": "/player-dashboard", "destination": "/player-dashboard.html" },
+    { "source": "/facility-dashboard", "destination": "/facility-dashboard.html" },
+    { "source": "/player-signup", "destination": "/player-signup.html" },
+    { "source": "/facility-signup", "destination": "/facility-signup.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/map", "destination": "/map.html" }
+  ]
 }
