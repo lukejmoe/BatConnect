@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { supabase } from "./supabase";
 
 export default function FacilityDetail() {
@@ -40,9 +40,13 @@ export default function FacilityDetail() {
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-      <View style={styles.heroCard}>
-        <Text style={styles.heroIcon}>⚾</Text>
-      </View>
+      {facility.photo_url ? (
+        <Image source={{ uri: facility.photo_url }} style={styles.heroImage} resizeMode="cover" />
+      ) : (
+        <View style={styles.heroCard}>
+          <Text style={styles.heroIcon}>⚾</Text>
+        </View>
+      )}
 
       <View style={styles.content}>
         <View style={styles.headerRow}>
@@ -108,7 +112,8 @@ export default function FacilityDetail() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#0a0a0a" },
   loadingText: { color: "#aaaaaa", textAlign: "center", marginTop: 80, fontSize: 16 },
-  heroCard: { backgroundColor: "#1d3557", height: 180, justifyContent: "center", alignItems: "center" },
+  heroImage: { width: "100%", height: 200 },
+  heroCard: { backgroundColor: "#1d3557", height: 200, justifyContent: "center", alignItems: "center" },
   heroIcon: { fontSize: 72 },
   content: { padding: 24 },
   headerRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 },
