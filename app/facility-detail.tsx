@@ -59,8 +59,8 @@ export default function FacilityDetail() {
             <Text style={styles.statLabel}>Per Hour</Text>
           </View>
           <View style={styles.statBox}>
-            <Text style={styles.statValue}>3</Text>
-            <Text style={styles.statLabel}>Lanes</Text>
+            <Text style={styles.statValue}>{facility.tunnels || '–'}</Text>
+            <Text style={styles.statLabel}>Tunnels</Text>
           </View>
           <View style={styles.statBox}>
             <Text style={styles.statValue}>{facility.rating}</Text>
@@ -84,9 +84,13 @@ export default function FacilityDetail() {
 
         <Text style={styles.sectionTitle}>Hours</Text>
         <View style={styles.hoursBox}>
-          <Text style={styles.hoursText}>Monday – Friday: 9:00 AM – 9:00 PM</Text>
-          <Text style={styles.hoursText}>Saturday: 8:00 AM – 10:00 PM</Text>
-          <Text style={styles.hoursText}>Sunday: 10:00 AM – 6:00 PM</Text>
+          {facility.hours ? (
+            facility.hours.split(' | ').map((line: string, i: number) => (
+              <Text key={i} style={styles.hoursText}>{line}</Text>
+            ))
+          ) : (
+            <Text style={styles.hoursText}>Contact facility for hours</Text>
+          )}
         </View>
 
         <TouchableOpacity style={styles.bookButton} onPress={() => router.push("/booking")}>
