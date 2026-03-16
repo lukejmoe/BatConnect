@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, Linking, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { supabase } from "./supabase";
 
 export default function FacilityDetail() {
@@ -97,6 +97,13 @@ export default function FacilityDetail() {
           )}
         </View>
 
+        <TouchableOpacity style={styles.directionsButton} onPress={() => {
+          const query = encodeURIComponent(`${facility.address}, ${facility.city}, AZ`);
+          Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+        }}>
+          <Text style={styles.directionsButtonText}>📍 Get Directions</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.bookButton} onPress={() => router.push("/booking")}>
           <Text style={styles.bookButtonText}>Book Now — ${facility.price_per_hour}/hr</Text>
         </TouchableOpacity>
@@ -131,6 +138,8 @@ const styles = StyleSheet.create({
   feature: { fontSize: 14, color: "#ffffff" },
   hoursBox: { backgroundColor: "#1a1a1a", borderRadius: 12, padding: 16, marginBottom: 24, borderWidth: 1, borderColor: "#333", gap: 8 },
   hoursText: { fontSize: 14, color: "#aaaaaa" },
+  directionsButton: { backgroundColor: "#1d3557", paddingVertical: 16, borderRadius: 12, alignItems: "center", marginBottom: 12 },
+  directionsButtonText: { color: "#ffffff", fontSize: 16, fontWeight: "bold" },
   bookButton: { backgroundColor: "#e63946", paddingVertical: 16, borderRadius: 12, alignItems: "center", marginBottom: 12 },
   bookButtonText: { color: "#ffffff", fontSize: 18, fontWeight: "bold" },
   backButton: { backgroundColor: "#1d3557", paddingVertical: 14, borderRadius: 12, alignItems: "center", marginBottom: 40 },
