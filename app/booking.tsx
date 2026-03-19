@@ -1,5 +1,5 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { supabase } from "./supabase";
 
@@ -24,6 +24,16 @@ export default function Booking() {
   const facilityName = name ? decodeURIComponent(name as string) : 'Batting Cages';
   const facilityCity = city ? decodeURIComponent(city as string) : '';
   const pricePerHour = price || '0';
+  const [tunnels, setTunnels] = useState<number>(3);
+
+  useEffect(() => {
+    async function fetchTunnels() {
+      if (!id) return;
+      const { data } = await supabase.from('facilities').select('tunnels').eq('id', id).single();
+      if (data?.tunnels) setTunnels(data.tunnels);
+    }
+    fetchTunnels();
+  }, [id]);
 
   async function handleConfirm() {
     if (!selectedLane || !selectedTime) {
@@ -54,7 +64,7 @@ export default function Booking() {
       <Text style={styles.price}>${pricePerHour}/hr</Text>
       <Text style={styles.sectionTitle}>Select a Lane</Text>
       <View style={styles.laneRow}>
-        {["Lane 1", "Lane 2", "Lane 3"].map((lane) => (
+        {Array.from({ length: tunnels }, (_, i) => `Lane ${i + 1}`).map((lane) => (
           <TouchableOpacity
             key={lane}
             style={[styles.laneButton, selectedLane === lane && styles.laneSelected]}
