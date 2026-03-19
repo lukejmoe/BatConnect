@@ -104,7 +104,7 @@ export default function FacilityDetail() {
           <Text style={styles.directionsButtonText}>📍 Get Directions</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.bookButton} onPress={() => router.push("/booking")}>
+        <TouchableOpacity style={styles.bookButton} onPress={() => router.push(`/booking?id=${facility.id}&name=${encodeURIComponent(facility.name)}&price=${facility.price_per_hour}&city=${encodeURIComponent(facility.city)}`)}>
           <Text style={styles.bookButtonText}>Book Now — ${facility.price_per_hour}/hr</Text>
         </TouchableOpacity>
 

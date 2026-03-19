@@ -1,10 +1,18 @@
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function Payment() {
   const router = useRouter();
+  const { name, lane, time, price } = useLocalSearchParams();
   const [loading, setLoading] = useState(false);
+
+  const facilityName = name ? decodeURIComponent(name as string) : 'Batting Cages';
+  const facilityLane = lane ? decodeURIComponent(lane as string) : 'Lane 1';
+  const facilityTime = time ? decodeURIComponent(time as string) : '';
+  const pricePerHour = parseFloat(price as string) || 20;
+  const amount = pricePerHour * 100;
+  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
   async function handlePayment() {
     setLoading(true);
@@ -13,11 +21,11 @@ export default function Payment() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: 2000,
-          facilityName: 'Diamond Strike Batting Cages',
-          lane: 'Lane 1',
-          date: 'Mar 12',
-          time: '9:00 AM',
+          amount,
+          facilityName,
+          lane: facilityLane,
+          date: today,
+          time: facilityTime,
         }),
       });
       const { url, error } = await response.json();
@@ -32,12 +40,12 @@ export default function Payment() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Payment</Text>
-      <Text style={styles.subtitle}>Diamond Strike Batting Cages</Text>
+      <Text style={styles.subtitle}>{facilityName}</Text>
 
       <View style={styles.summaryCard}>
-        <Text style={styles.summaryText}>🏟 Lane 1</Text>
-        <Text style={styles.summaryText}>📅 Mar 12 at 9:00 AM</Text>
-        <Text style={styles.summaryTotal}>Total: $20.00</Text>
+        <Text style={styles.summaryText}>🏟 {facilityLane}</Text>
+        <Text style={styles.summaryText}>📅 {today} at {facilityTime}</Text>
+        <Text style={styles.summaryTotal}>Total: ${pricePerHour.toFixed(2)}</Text>
       </View>
 
       <Text style={styles.info}>
@@ -45,7 +53,7 @@ export default function Payment() {
       </Text>
 
       <TouchableOpacity style={styles.button} onPress={handlePayment} disabled={loading}>
-        <Text style={styles.buttonText}>{loading ? "Redirecting..." : "Pay $20.00"}</Text>
+        <Text style={styles.buttonText}>{loading ? "Redirecting..." : `Pay $${pricePerHour.toFixed(2)}`}</Text>
       </TouchableOpacity>
 
       <Text style={styles.secure}>🔒 Secured by Stripe</Text>
